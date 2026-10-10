@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misi Bina Ayat Bergambar - Tahun 3</title>
+<style>
+:root{--navy:#14213d;--blue:#2563eb;--gold:#fbbf24;--cream:#fff8e7;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#dbeafe,#fef3c7);color:var(--navy)}
+.wrap{max-width:980px;margin:auto;padding:16px}
+.hero{background:linear-gradient(120deg,#172554,#1d4ed8);color:white;border-radius:24px;padding:22px;text-align:center;box-shadow:0 8px 0 #bfdbfe}
+.hero h1{margin:4px 0;font-size:clamp(1.5rem,4vw,2.4rem)}.hero p{margin:8px 0 0}
+.panel{background:#fff;border:3px solid #dbeafe;border-radius:20px;padding:18px;margin-top:16px;box-shadow:0 5px 0 #cbd5e1}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label{font-weight:700;display:block;margin-bottom:6px}
+input[type=text],textarea,select{width:100%;padding:12px;border:2px solid #cbd5e1;border-radius:12px;font:inherit;background:white}
+textarea{min-height:105px;resize:vertical}
+.field{flex:1;min-width:220px}
+button{border:0;border-radius:14px;padding:12px 17px;font-weight:800;font-size:1rem;cursor:pointer;background:var(--blue);color:white;box-shadow:0 4px 0 #1e40af}
+button:active{transform:translateY(2px);box-shadow:0 2px 0 #1e40af}
+button.secondary{background:#fbbf24;color:#422006;box-shadow:0 4px 0 #d97706}
+button.light{background:#e0f2fe;color:#075985;box-shadow:0 4px 0 #7dd3fc}
+.missionhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{background:#fef3c7;color:#854d0e;padding:6px 11px;border-radius:99px;font-weight:800}
+.picture{background:linear-gradient(#bfdbfe,#dcfce7);border:3px dashed #60a5fa;border-radius:18px;padding:18px;text-align:center}
+.emoji{font-size:clamp(4rem,15vw,7rem);line-height:1.2}
+.piccaption{font-weight:800;font-size:1.1rem;margin-top:5px}
+.phrases{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.phrase{background:#ede9fe;border:2px solid #c4b5fd;color:#4c1d95;border-radius:12px;padding:8px 12px;font-weight:800}
+.feedback{padding:14px;border-radius:14px;margin-top:12px;display:none}
+.feedback.good{display:block;background:#dcfce7;border:2px solid #86efac}
+.feedback.warn{display:block;background:#fef3c7;border:2px solid #fcd34d}
+.feedback.bad{display:block;background:#fee2e2;border:2px solid #fca5a5}
+.scorebar{height:14px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:8px 0}
+.scorefill{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#84cc16);transition:width .3s}
+.small{font-size:.92rem;color:#475569}.hidden{display:none}
+footer{text-align:center;padding:20px;color:#475569}
+@media(max-width:560px){.wrap{padding:10px}.panel{padding:13px}.hero{padding:18px 12px}.row button{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div style="font-size:2rem">🗺️ 🏰 ✏️</div>
+  <h1>MISI BINA AYAT BERGAMBAR</h1>
+  <p>Bahasa Melayu Tahun 3 • Lihat gambar, gunakan frasa, bina ayat gramatis!</p>
+</header>
+
+<section class="panel">
+  <div class="row">
+    <div class="field"><label for="student">Nama murid</label><input id="student" type="text" placeholder="Taip nama penuh murid"></div>
+    <div class="field"><label for="classroom">Kelas</label><select id="classroom"><option>3 Focused</option><option>3 Victory</option></select></div>
+  </div>
+  <p class="small">Arahan: Perhatikan gambar dan gunakan frasa yang diberi untuk membina satu ayat lengkap. Mulakan ayat dengan huruf besar dan akhiri dengan tanda baca.</p>
+</section>
+
+<section class="panel">
+  <div class="missionhead"><h2 id="missionTitle" style="margin:0">Misi 1 daripada 8</h2><span class="pill" id="liveScore">Markah: 0/40</span></div>
+  <div class="scorebar"><div class="scorefill" id="scoreFill"></div></div>
+  <div class="picture">
+    <div class="emoji" id="picture">👧🏻 🌱 💧</div>
+    <div class="piccaption" id="caption">Aina menyiram pokok bunga.</div>
+  </div>
+  <h3>Frasa kata panduan</h3>
+  <div class="phrases" id="phrases"></div>
+  <label for="answer">Ayat saya</label>
+  <textarea id="answer" placeholder="Contoh: Aina menyiram pokok bunga di halaman rumah." maxlength="350"></textarea>
+  <p class="small">Tip: Pastikan ayat berkaitan dengan gambar, gunakan frasa yang diberi dan tulis ayat yang lengkap.</p>
+  <div class="row">
+    <button onclick="checkAnswer()">🔎 Semak Ayat</button>
+    <button class="secondary" onclick="showHint()">💡 Petunjuk</button>
+    <button class="light" onclick="nextMission()">➡️ Misi Seterusnya</button>
+  </div>
+  <div id="feedback" class="feedback" aria-live="polite"></div>
+</section>
+
+<section class="panel">
+  <div class="missionhead"><h2 style="margin:0">🏆 Kad Pencapaian</h2><span class="pill" id="percent">0%</span></div>
+  <p id="resultLine">Lengkapkan misi untuk melihat pencapaian kamu.</p>
+  <div class="row">
+    <button class="secondary" onclick="showSummary()">📋 Lihat Keputusan</button>
+    <button class="light" onclick="resetGame()">🔄 Mula Semula</button>
+    <button onclick="downloadResult()">⬇️ Simpan Keputusan (.txt)</button>
+  </div>
+  <div id="summary" class="feedback"></div>
+</section>
+<footer>Ilmu + Adab + Jaya • Game latihan untuk 3 Focused & 3 Victory</footer>
+</div>
+<script>
+const missions = [
+ {emoji:"👧🏻 🌱 💧",caption:"Aina menyiram pokok bunga.",phrases:["Aina","menyiram","pokok bunga","pada waktu petang"],hint:"Mulakan dengan nama Aina. Apakah yang dilakukan? Bilakah dia menyiram pokok bunga?",keywords:["aina","menyiram","pokok bunga"],sample:"Aina menyiram pokok bunga pada waktu petang."},
+ {emoji:"👦🏻 📚 🏫",caption:"Amir membaca buku di perpustakaan.",phrases:["Amir","membaca","sebuah buku","di perpustakaan"],hint:"Gunakan nama Amir dan kata kerja membaca. Nyatakan tempat dia membaca.",keywords:["amir","membaca","buku","perpustakaan"],sample:"Amir membaca sebuah buku di perpustakaan."},
+ {emoji:"👧🏻 🧹 🏠",caption:"Siti membantu ibunya mengemas rumah.",phrases:["Siti","membantu","ibunya","mengemas rumah"],hint:"Siapakah yang membantu? Siapakah yang dibantu? Apakah kerja yang dilakukan?",keywords:["siti","membantu","ibu","mengemas","rumah"],sample:"Siti membantu ibunya mengemas rumah."},
+ {emoji:"👨🏻‍🌾 🥬 🌞",caption:"Pak Ali menanam sayur di kebun.",phrases:["Pak Ali","menanam","sayur-sayuran","di kebun"],hint:"Mulakan dengan Pak Ali. Gunakan kata kerja menanam dan nyatakan tempat.",keywords:["pak ali","menanam","sayur","kebun"],sample:"Pak Ali menanam sayur-sayuran di kebun."},
+ {emoji:"👦🏻 ⚽ 🏃",caption:"Ravi bermain bola sepak bersama kawan-kawannya.",phrases:["Ravi","bermain","bola sepak","bersama kawan-kawannya"],hint:"Siapakah yang bermain? Apakah permainan itu? Dengan siapa dia bermain?",keywords:["ravi","bermain","bola sepak"],sample:"Ravi bermain bola sepak bersama kawan-kawannya."},
+ {emoji:"👩🏻‍🍳 🍲 🥕",caption:"Ibu memasak sup sayur di dapur.",phrases:["Ibu","memasak","sup sayur","di dapur"],hint:"Mulakan dengan Ibu. Nyatakan masakan dan tempat memasak.",keywords:["ibu","memasak","sup","dapur"],sample:"Ibu memasak sup sayur di dapur."},
+ {emoji:"🐈 🥛 🧒🏻",caption:"Adik memberikan susu kepada kucing.",phrases:["Adik","memberikan","susu","kepada kucing"],hint:"Siapakah yang memberikan susu? Kepada haiwan apakah susu itu diberikan?",keywords:["adik","memberikan","susu","kucing"],sample:"Adik memberikan susu kepada kucing."},
+ {emoji:"👧🏻 🗑️ 🌳",caption:"Mei Ling membuang sampah ke dalam tong sampah.",phrases:["Mei Ling","membuang sampah","ke dalam tong sampah","menjaga kebersihan"],hint:"Bina ayat tentang Mei Ling membuang sampah dengan cara yang betul.",keywords:["mei ling","membuang","sampah","tong sampah"],sample:"Mei Ling membuang sampah ke dalam tong sampah untuk menjaga kebersihan."}
+];
+let index=0, scores=Array(missions.length).fill(null), feedbacks=Array(missions.length).fill("");
+const $=id=>document.getElementById(id);
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,!?;:]/g," ").replace(/\s+/g," ").trim()}
+function render(){
+ const m=missions[index]; $("missionTitle").textContent=`Misi ${index+1} daripada ${missions.length}`;
+ $("picture").textContent=m.emoji;$("caption").textContent=m.caption;
+ $("phrases").innerHTML=m.phrases.map(p=>`<span class="phrase">${p}</span>`).join("");
+ $("answer").value="";$("feedback").className="feedback";$("feedback").innerHTML="";
+ $("liveScore").textContent=`Markah: ${totalScore()}/${missions.length*5}`;
+ $("scoreFill").style.width=(totalScore()/(missions.length*5)*100)+"%";
+ $("percent").textContent=Math.round(totalScore()/(missions.length*5)*100)+"%";
+ if(scores[index]!==null){$("answer").value=feedbacks[index].split("\nAYAT: ")[1]||"";}
+}
+function totalScore(){return scores.reduce((a,s)=>a+(s||0),0)}
+function checkAnswer(){
+ const raw=$("answer").value.trim(), text=norm(raw), m=missions[index], fb=$("feedback");
+ if(!$("student").value.trim()){fb.className="feedback warn";fb.innerHTML="⚠️ Sila isi nama murid dahulu.";return}
+ if(raw.length<5){fb.className="feedback warn";fb.innerHTML="Tulis satu ayat yang lengkap dahulu.";return}
+ let points=0, notes=[];
+ const matched=m.keywords.filter(k=>text.includes(norm(k)));
+ points+=Math.min(3,matched.length);
+ if(/[.!?]$/.test(raw.trim()))points++;else notes.push("Tambah tanda noktah pada akhir ayat.");
+ if(/^[A-ZÀ-Ý]/.test(raw.trim()))points++;else notes.push("Mulakan ayat dengan huruf besar.");
+ const words=text.split(" ").filter(Boolean);
+ if(words.length<4)notes.push("Kembangkan ayat dengan maklumat yang lebih jelas.");
+ if(matched.length<m.keywords.length-1)notes.push("Cuba masukkan lebih banyak maklumat daripada frasa kata panduan.");
+ if(!/[.!?]$/.test(raw.trim()))points=Math.max(0,points);
+ scores[index]=Math.min(5,points);feedbacks[index]=`Skor ${scores[index]}/5\nAYAT: ${raw}`;
+ let grade=points>=5?"Cemerlang!":points>=4?"Bagus!":points>=2?"Teruskan usaha!":"Cuba baiki ayat kamu.";
+ fb.className="feedback "+(points>=4?"good":points>=2?"warn":"bad");
+ fb.innerHTML=`<strong>${grade} Markah: ${scores[index]}/5</strong><br>Frasa penting digunakan: ${matched.length} daripada ${m.keywords.length}.<br>${notes.length?notes.map(n=>"• "+n).join("<br>"):"• Ayat menggunakan petunjuk utama dan tanda baca."}<br><br><strong>Contoh jawapan:</strong> ${m.sample}<br><span class="small">Semakan ini automatik berdasarkan kata kunci dan ciri asas ayat; ia bukan AI generatif dan guru masih perlu menyemak maksud serta tatabahasa.</span>`;
+ $("liveScore").textContent=`Markah: ${totalScore()}/${missions.length*5}`;$("scoreFill").style.width=(totalScore()/(missions.length*5)*100)+"%";$("percent").textContent=Math.round(totalScore()/(missions.length*5)*100)+"%";
+ $("resultLine").textContent=`${$("student").value.trim()} telah memperoleh ${totalScore()} daripada ${missions.length*5} markah setakat ini.`;
+}
+function showHint(){const fb=$("feedback");fb.className="feedback warn";fb.innerHTML="💡 "+missions[index].hint}
+function nextMission(){if(index<missions.length-1){index++;render()}else{showSummary()}}
+function showSummary(){
+ const name=$("student").value.trim()||"Murid belum menulis nama", cls=$("classroom").value, attempted=scores.filter(s=>s!==null).length, total=totalScore(), max=missions.length*5;
+ const lines=scores.map((s,i)=>`Misi ${i+1}: ${s===null?"Belum dijawab":s+"/5"}`).join("<br>");
+ $("summary").className="feedback good";$("summary").innerHTML=`<strong>Keputusan ${name} • ${cls}</strong><br>Markah: ${total}/${max} (${Math.round(total/max*100)}%)<br>Misi disemak: ${attempted}/${missions.length}<br>${lines}`;
+}
+function resetGame(){if(confirm("Mula semula dan padam markah sesi ini?")){index=0;scores=Array(missions.length).fill(null);feedbacks=Array(missions.length).fill("");$("summary").className="feedback";$("summary").innerHTML="";render()}}
+function downloadResult(){
+ const name=$("student").value.trim()||"Murid";const cls=$("classroom").value;
+ const content=`KEPUTUSAN MISI BINA AYAT BERGAMBAR\nNama: ${name}\nKelas: ${cls}\nMarkah: ${totalScore()}/${missions.length*5}\nPeratus: ${Math.round(totalScore()/(missions.length*5)*100)}%\n\n`+scores.map((s,i)=>`Misi ${i+1}: ${s===null?"Belum dijawab":s+"/5"}`).join("\n");
+ const blob=new Blob([content],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Keputusan_${name.replace(/\s+/g,"_")}.txt`;a.click();URL.revokeObjectURL(url);
+}
+render();
+</script>
+</body>
+</html>
